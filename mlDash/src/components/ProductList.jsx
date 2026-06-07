@@ -154,7 +154,7 @@ export default function ProductList({
                 </div>
                 <span className="similarity-score">
                   <span className="similarity-score-val">
-                    {(item.similarity * 100).toFixed(1)}
+                    {(item.similarity * 100).toFixed(1)}%
                   </span>
                 </span>
               </div>
