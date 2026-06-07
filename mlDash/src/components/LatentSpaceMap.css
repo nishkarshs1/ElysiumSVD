@@ -1,0 +1,183 @@
+.latent-space-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 400px;
+}
+
+.latent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.latent-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.text-accent {
+  color: var(--accent-color);
+}
+
+.latent-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--accent-color);
+}
+
+.map-area {
+  flex: 1;
+  position: relative;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--card-border);
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.map-connections-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hover-connection-line {
+  stroke: var(--accent-color);
+  stroke-width: 1.5;
+  opacity: 0.6;
+  stroke-dasharray: 4;
+}
+
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+  background-size: 100% 20%;
+  pointer-events: none;
+}
+
+.grid-lines.horizontal {
+  background-image: linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+  background-size: 20% 100%;
+}
+
+.latent-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--text-secondary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%); /* Changed from 50% to -50% to align correctly */
+  cursor: pointer;
+  opacity: 0.6;
+  transition: background 0.3s, opacity 0.3s, box-shadow 0.3s;
+  z-index: 10;
+}
+
+.latent-dot.dimmed {
+  opacity: 0.2;
+}
+
+.latent-dot.highlighted {
+  background: var(--accent-color);
+  opacity: 1;
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 10px var(--accent-color);
+  z-index: 15;
+}
+
+.latent-dot.selected {
+  background: #06b6d4; /* Cyan */
+  opacity: 1;
+  width: 12px;
+  height: 12px;
+  box-shadow: 0 0 15px #06b6d4;
+  z-index: 20;
+}
+
+.latent-dot:hover {
+  background: var(--accent-color);
+  opacity: 1 !important;
+  box-shadow: 0 0 20px var(--accent-color);
+  z-index: 25;
+}
+
+.latent-dot.selected:hover {
+  background: #06b6d4;
+  box-shadow: 0 0 20px #06b6d4;
+}
+
+.latent-dot.searched:hover {
+  background: #f97316;
+  box-shadow: 0 0 20px #f97316;
+}
+
+.latent-dot.similar-result:hover {
+  background: #10b981;
+  box-shadow: 0 0 20px #10b981;
+}
+
+.dot-tooltip {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(31, 41, 55, 0.9);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  pointer-events: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+.latent-dot:hover .dot-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 2px;
+  font-family: monospace;
+}
+.latent-dot.searched { background: #f97316; opacity: 1 !important; width: 14px; height: 14px; box-shadow: 0 0 20px #f97316; z-index: 30; } .latent-dot.similar-result { background: #10b981; opacity: 1 !important; width: 10px; height: 10px; box-shadow: 0 0 15px #10b981; z-index: 25; }
+.category-filter { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--card-border); background: var(--bg-color); color: var(--text-primary); font-size: 0.85rem; outline: none; cursor: pointer; transition: border-color 0.2s; } .category-filter:focus { border-color: var(--accent-color); } .latent-dot.filtered-out { opacity: 0.05 !important; transform: scale(0.5) !important; pointer-events: none; z-index: 1; }

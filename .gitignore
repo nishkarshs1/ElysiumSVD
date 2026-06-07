@@ -1,0 +1,29 @@
+# ==========================================
+# ⚡ FRONTEND (React/Vite - mlDash)
+# ==========================================
+mlDash/node_modules/
+mlDash/dist/
+mlDash/dist-ssr/
+mlDash/.env
+mlDash/.env.*
+
+# ==========================================
+# 🐍 BACKEND (FastAPI/Python - mlRecommender)
+# ==========================================
+mlRecommender/myenv/
+mlRecommender/__pycache__/
+mlRecommender/.pytest_cache/
+mlRecommender/.ipynb_checkpoints/
+mlRecommender/*.py[cod]
+mlRecommender/Untitled.ipynb
+
+# ==========================================
+# 🛠️ GLOBAL LOGS & SYSTEM FILES
+# ==========================================
+logs
+*.log
+npm-debug.log*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
