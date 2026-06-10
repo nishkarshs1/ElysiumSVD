@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 import numpy as np
 import pandas as pd
@@ -11,12 +12,18 @@ ratings_df: Optional[pd.DataFrame] = None
 def load_model():
     global U, sigma, Vt, ratings_df
     
-    U = joblib.load("model/U.pkl")
-    sigma = joblib.load("model/sigma.pkl")
-    Vt = joblib.load("model/Vt.pkl")
-    ratings_df = joblib.load("model/ratings_df.pkl")
+    CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) # Pointing to 'app/'
+    BASE_DIR = os.path.dirname(CURRENT_DIR)                  # Pointing to 'mlRecommender/' root
+    MODEL_DIR = os.path.join(BASE_DIR, "model")              # Absolute path to 'model/'
     
-    print("Model loaded successfully ✓")
+    print(f"📦 System loading binary frames directly from: {MODEL_DIR}")
+    
+    U = joblib.load(os.path.join(MODEL_DIR, "U.pkl"))
+    sigma = joblib.load(os.path.join(MODEL_DIR, "sigma.pkl"))
+    Vt = joblib.load(os.path.join(MODEL_DIR, "Vt.pkl"))
+    ratings_df = joblib.load(os.path.join(MODEL_DIR, "ratings_df.pkl"))
+
+    print("Model loaded successfully")
 
 def get_recommendations(user_id: int, n: int = 5):
     global U, sigma, Vt, ratings_df
