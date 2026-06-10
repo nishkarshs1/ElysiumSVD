@@ -21,7 +21,7 @@ def load_model():
     U = joblib.load(os.path.join(MODEL_DIR, "U.pkl"))
     sigma = joblib.load(os.path.join(MODEL_DIR, "sigma.pkl"))
     Vt = joblib.load(os.path.join(MODEL_DIR, "Vt.pkl"))
-    ratings_df = joblib.load(os.path.join(MODEL_DIR, "ratings_df.pkl"))
+    ratings_df = pd.read_csv(os.path.join(MODEL_DIR, "ratings_df.csv"))
 
     print("Model loaded successfully")
 
