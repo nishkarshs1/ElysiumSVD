@@ -5,13 +5,13 @@ from app.recommender import load_model
 
 client = TestClient(app)
 
-# pytest fixture jo tests chalne se pehle ek baar model load kar dega
+# Fixture to load model once before all tests run
 @pytest.fixture(scope="session", autouse=True)
 def setup_model():
     try:
         load_model()
     except Exception:
-        # Agar pickle files nahi milti tests me, toh hum synthetic dummy data se mock kar sakte hain
+        # If pickle files are missing, mock with synthetic dummy data
         import numpy as np
         import pandas as pd
         import app.recommender as rec
@@ -19,8 +19,10 @@ def setup_model():
         rec.U = np.random.rand(10, 3)
         rec.sigma = np.array([2.5, 1.5, 0.5])
         rec.Vt = np.random.rand(3, 20)
-        rec.ratings_df = pd.DataFrame({'user_id': [0, 1], 'product_id': [2, 3]})
-        print("Mocked model components for testing ✓")
+        rec.ratings_df = pd.DataFrame({'user_id': [0, 1], 'movie_id': [2, 3]})
+        rec.user_ratings_mean = np.random.rand(10)
+        rec.movie_titles = {i: f"Test Movie {i}" for i in range(20)}
+        print("Mocked model components for testing")
 
 def test_health():
     r = client.get("/health")
@@ -36,10 +38,9 @@ def test_recommend_valid_user():
 
 def test_recommend_invalid_n():
     r = client.get("/recommend/0?n=99")
-    # Pydantic Query validation validation agar lagayi hai toh 422 standard hota hai
     assert r.status_code in [400, 422] 
 
-def test_similar_products():
+def test_similar_movies():
     r = client.get("/similar/5")
     assert r.status_code == 200
     assert "similar" in r.json()

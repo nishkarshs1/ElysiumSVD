@@ -28,7 +28,7 @@ export default function XAIPanel({ isOpen, targetId, results, onClose }) {
             <ul className="xai-list">
               {results.slice(0, 3).map((item, i) => (
                 <li key={i}>
-                  ➔ Movie #{item.product_id} due to a <strong>{(item.similarity * 100).toFixed(1)}%</strong> cosine proximity.
+                  ➔ Movie #{item.movie_id} due to a <strong>{(item.similarity * 100).toFixed(1)}%</strong> cosine proximity.
                 </li>
               ))}
             </ul>

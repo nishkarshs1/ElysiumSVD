@@ -46,42 +46,42 @@ def get_recommendations(user_id: int, n: int = 5):
     R_predicted_user = np.dot(np.dot(U[user_id], Sigma), Vt) + user_ratings_mean[user_id]
     user_scores = np.clip(R_predicted_user, 1, 5)
 
-    # Exclude products the user already rated
-    already_rated = ratings_df[ratings_df['user_id'] == user_id]['product_id'].values
+    # Exclude movies the user already rated
+    already_rated = ratings_df[ratings_df['user_id'] == user_id]['movie_id'].values
     user_scores[already_rated] = -999
 
     top_n = np.argsort(user_scores)[::-1][:n]
     return {"user_id": user_id, "recommendations": top_n.tolist(), "cold_start": False}
 
-def get_similar_products(product_id: int, n: int = 5):
+def get_similar_products(movie_id: int, n: int = 5):
     global Vt
     
     if Vt is None:
         raise RuntimeError("Model components are not loaded. Please call load_model() first.")
 
-    if product_id >= Vt.shape[1]:
-        return {"product_id": product_id, "similar": []}
+    if movie_id >= Vt.shape[1]:
+        return {"movie_id": movie_id, "similar": []}
 
-    product_vec = Vt[:, product_id]
-    dot_products = np.dot(Vt.T, product_vec)
+    movie_vec = Vt[:, movie_id]
+    dot_products = np.dot(Vt.T, movie_vec)
     norms = np.linalg.norm(Vt, axis=0)
-    prod_norm = np.linalg.norm(product_vec)
+    movie_norm = np.linalg.norm(movie_vec)
     
-    cos_sims = dot_products / (prod_norm * norms + 1e-9)
-    cos_sims[product_id] = -1.0
+    cos_sims = dot_products / (movie_norm * norms + 1e-9)
+    cos_sims[movie_id] = -1.0
     
     top_indices = np.argsort(cos_sims)[::-1][:n]
     
     similar = [
-        {"product_id": int(pid), "similarity": round(float(cos_sims[pid]), 4)} 
+        {"movie_id": int(pid), "similarity": round(float(cos_sims[pid]), 4)} 
         for pid in top_indices
     ]
-    return {"product_id": product_id, "similar": similar}
+    return {"movie_id": movie_id, "similar": similar}
 
 def get_latent_space() -> list[dict]:
     """
-    Extract the first 2 principal components of each product's latent vector.
-    Vt shape is (k, num_products) — each column is one product's latent factors.
+    Extract the first 2 principal components of each movie's latent vector.
+    Vt shape is (k, num_movies) — each column is one movie's latent factors.
     We slice Vt[0, pid] and Vt[1, pid] to get the 2D coordinates.
     """
 
@@ -96,11 +96,11 @@ def get_latent_space() -> list[dict]:
             "Need at least 2 for 2D projection."
         )
 
-    num_products: int = Vt.shape[1]
+    num_movies: int = Vt.shape[1]
 
     result: list[dict] = [
         {
-            "product_id": pid,
+            "movie_id": pid,
             "coordinates": {
                 # Vt[0, pid] = projection onto 1st principal component (x-axis)
                 # Vt[1, pid] = projection onto 2nd principal component (y-axis)
@@ -109,13 +109,13 @@ def get_latent_space() -> list[dict]:
                 "y": float(Vt[1, pid]),
             },
         }
-        for pid in range(num_products)
+        for pid in range(num_movies)
     ]
 
     return result
 
 def get_movie_titles() -> dict:
-    """Returns the full {product_id: title} mapping."""
+    """Returns the full {movie_id: title} mapping."""
     if movie_titles is None:
         raise ValueError("Movie titles not loaded. Call load_model() first.")
     return movie_titles

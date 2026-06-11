@@ -184,8 +184,8 @@ export default function Dashboard() {
             }
             hoveredProduct={hoveredProduct}
             selectedProduct={selectedProduct}
-            similarProducts={similarProducts ? similarProducts.map(s => s.product_id) : []}
-            mapSimilarIds={mapSimilar ? mapSimilar.map(s => s.product_id) : []}
+            similarProducts={similarProducts ? similarProducts.map(s => s.movie_id) : []}
+            mapSimilarIds={mapSimilar ? mapSimilar.map(s => s.movie_id) : []}
             clickedMovie={clickedMovie}
             isFetching={loading}
             onNodeClick={handleNodeClick}
@@ -212,12 +212,12 @@ export default function Dashboard() {
           ) : mapSimilar ? (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
               {mapSimilar.map((item) => (
-                <div key={item.product_id} className="glass-panel" style={{ padding: '12px 18px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', transition: 'all 0.2s' }}
-                  onClick={() => handleNodeClick(item.product_id)}
-                  onMouseEnter={() => setHoveredProduct({ id: item.product_id, source: 'row' })}
+                <div key={item.movie_id} className="glass-panel" style={{ padding: '12px 18px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', transition: 'all 0.2s' }}
+                  onClick={() => handleNodeClick(item.movie_id)}
+                  onMouseEnter={() => setHoveredProduct({ id: item.movie_id, source: 'row' })}
                   onMouseLeave={() => setHoveredProduct(null)}
                 >
-                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{movieTitles[item.product_id] || `Movie #${item.product_id}`}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{movieTitles[item.movie_id] || `Movie #${item.movie_id}`}</span>
                   <span style={{ color: 'var(--accent-color)', fontSize: '0.85rem', fontWeight: 500 }}>{(item.similarity * 100).toFixed(1)}%</span>
                 </div>
               ))}

@@ -69,7 +69,7 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
     const step = Math.max(1, Math.floor(points.length / MAX_VISIBLE_NODES));
     const ids = new Set();
     for (let i = 0; i < points.length; i += step) {
-      ids.add(points[i].product_id);
+      ids.add(points[i].movie_id);
     }
     return ids;
   }, [points]);
@@ -77,7 +77,7 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
   // Final visible points = sampled ∪ important (important always shown)
   const visiblePoints = useMemo(() => {
     if (points.length === 0) return [];
-    return points.filter(p => sampledIds.has(p.product_id) || importantIds.has(p.product_id));
+    return points.filter(p => sampledIds.has(p.movie_id) || importantIds.has(p.movie_id));
   }, [points, sampledIds, importantIds]);
 
   // Idle and Fetching Animations — only target rendered dots
@@ -150,7 +150,7 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
     linesRef.current.innerHTML = '';
     const lines = [];
     const validPoints = highlightedProducts
-      .map(id => points.find(p => p.product_id === id))
+      .map(id => points.find(p => p.movie_id === id))
       .filter(Boolean);
 
     for (let i = 0; i < validPoints.length; i++) {
@@ -184,14 +184,14 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
       const xPercent = 5 + ((p.coordinates.x - scales.minX) / scales.rangeX) * 90;
       const yPercent = 95 - ((p.coordinates.y - scales.minY) / scales.rangeY) * 90;
 
-      const isHighlighted = highlightedProducts.includes(p.product_id);
-      const isSelected = selectedProduct === p.product_id;
-      const isHovered = hoveredProduct?.id === p.product_id;
-      const isSimilar = similarProducts && similarProducts.includes(p.product_id);
-      const isMapSimilar = mapSimilarIds.includes(p.product_id);
-      const isClicked = clickedMovie === p.product_id;
+      const isHighlighted = highlightedProducts.includes(p.movie_id);
+      const isSelected = selectedProduct === p.movie_id;
+      const isHovered = hoveredProduct?.id === p.movie_id;
+      const isSimilar = similarProducts && similarProducts.includes(p.movie_id);
+      const isMapSimilar = mapSimilarIds.includes(p.movie_id);
+      const isClicked = clickedMovie === p.movie_id;
       const hasSearch = highlightedProducts.length > 0 || mapSimilarIds.length > 0 || clickedMovie !== null;
-      const nodeCategory = getCategory(p.product_id);
+      const nodeCategory = getCategory(p.movie_id);
       const matchesCategory = selectedCategory === 'All' || nodeCategory === selectedCategory;
 
       let className = 'latent-dot';
@@ -213,13 +213,13 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
 
       return (
         <div
-          key={p.product_id}
+          key={p.movie_id}
           className={className}
           style={{ left: `${xPercent}%`, top: `${yPercent}%`, willChange: 'transform' }}
-          title={`${movieTitles[p.product_id] || 'Movie ' + p.product_id} (${nodeCategory})`}
-          onClick={() => { if (onNodeClick) onNodeClick(p.product_id); }}
+          title={`${movieTitles[p.movie_id] || 'Movie ' + p.movie_id} (${nodeCategory})`}
+          onClick={() => { if (onNodeClick) onNodeClick(p.movie_id); }}
         >
-          <div className="dot-tooltip">{movieTitles[p.product_id] || `Movie #${p.product_id}`} <br/><span style={{fontSize:'10px', color:'var(--text-secondary)'}}>{nodeCategory}</span></div>
+          <div className="dot-tooltip">{movieTitles[p.movie_id] || `Movie #${p.movie_id}`} <br/><span style={{fontSize:'10px', color:'var(--text-secondary)'}}>{nodeCategory}</span></div>
         </div>
       );
     });

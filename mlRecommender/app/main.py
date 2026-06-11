@@ -79,12 +79,12 @@ class RecommendationResponse(BaseModel):
 
 
 class SimilarProduct(BaseModel):
-    product_id: int
+    movie_id: int
     similarity: float
 
 
 class SimilarResponse(BaseModel):
-    product_id: int
+    movie_id: int
     similar: list[SimilarProduct]
 
 
@@ -94,7 +94,7 @@ class Coordinates(BaseModel):
 
 
 class LatentSpacePoint(BaseModel):
-    product_id: int
+    movie_id: int
     coordinates: Coordinates
 
 
@@ -114,19 +114,19 @@ def recommend(user_id: int, n: int = 5) -> RecommendationResponse:
     return RecommendationResponse(**get_recommendations(user_id, n))
 
 
-@app.get("/similar/{product_id}", response_model=SimilarResponse)
-def similar(product_id: int, n: int = 5) -> SimilarResponse:
-    if product_id < 0:
-        raise HTTPException(status_code=400, detail="product_id must be non-negative")
-    return SimilarResponse(**get_similar_products(product_id, n))
+@app.get("/similar/{movie_id}", response_model=SimilarResponse)
+def similar(movie_id: int, n: int = 5) -> SimilarResponse:
+    if movie_id < 0:
+        raise HTTPException(status_code=400, detail="movie_id must be non-negative")
+    return SimilarResponse(**get_similar_products(movie_id, n))
 
 
 @app.get("/api/v1/latent-space", response_model=list[LatentSpacePoint])
 def latent_space() -> list[LatentSpacePoint]:
     """
-    Returns every product's position in the 2D latent factor space.
+    Returns every movie's position in the 2D latent factor space.
     The frontend can plot these coordinates to visualise how the model
-    has clustered products by inferred similarity.
+    has clustered movies by inferred similarity.
     """
     try:
         points = get_latent_space()
@@ -138,7 +138,7 @@ def latent_space() -> list[LatentSpacePoint]:
 @app.get("/movies")
 def movies() -> dict:
     """
-    Returns a mapping of product_id (0-indexed int) to movie title string.
+    Returns a mapping of movie_id (0-indexed int) to movie title string.
     Frontend uses this to display real movie names.
     """
     try:

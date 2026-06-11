@@ -141,14 +141,14 @@ export default function ProductList({
           <div className="similar-list">
             {similarProducts.map((item, index) => (
               <div
-                key={`${item.product_id}-${index}`}
+                key={`${item.movie_id}-${index}`}
                 className="similar-item"
-                onClick={() => setHoveredProduct({ id: item.product_id, source: 'row' })}
-                onMouseEnter={() => setHoveredProduct({ id: item.product_id, source: 'row' })}
+                onClick={() => setHoveredProduct({ id: item.movie_id, source: 'row' })}
+                onMouseEnter={() => setHoveredProduct({ id: item.movie_id, source: 'row' })}
                 onMouseLeave={() => setHoveredProduct(null)}
               >
                 <Package size={18} className="text-secondary" />
-                <span className="item-id">{movieTitles[item.product_id] || `Movie #${item.product_id}`}</span>
+                <span className="item-id">{movieTitles[item.movie_id] || `Movie #${item.movie_id}`}</span>
                 <div className="similarity-bar">
                   <div
                     className="similarity-fill"
