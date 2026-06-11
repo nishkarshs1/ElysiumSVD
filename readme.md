@@ -1,5 +1,7 @@
 <div align="center">
-  <img src="mlDash/public/favicon.svg" alt="ElysiumSVD Logo" width="120" height="120" />
+  <a href="https://elysiumsvd.vercel.app">
+    <img src="mlDash/public/favicon.svg" alt="ElysiumSVD Logo" width="120" height="120" />
+  </a>
 </div>
 
 # ElysiumSVD 🎬
