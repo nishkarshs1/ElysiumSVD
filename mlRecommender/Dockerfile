@@ -1,5 +1,5 @@
 # Use a lightweight official Python image optimized for ML
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # Set working directory inside the container
 WORKDIR /app
