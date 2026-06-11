@@ -46,6 +46,28 @@ export default function Maths() {
           SVD is a linear algebra technique that factors the large, sparse matrix <i>R</i> into three smaller, dense matrices. This reduces dimensionality and isolates the underlying "latent factors" driving user behavior.
         </p>
         
+        <div className="matrix-visualizer">
+          <div className="matrix-block matrix-r">
+            <span>R</span>
+            <small>m × n</small>
+          </div>
+          <div className="matrix-operator">≈</div>
+          <div className="matrix-block matrix-u">
+            <span>U</span>
+            <small>m × k</small>
+          </div>
+          <div className="matrix-operator">×</div>
+          <div className="matrix-block matrix-sigma">
+            <span>Σ</span>
+            <small>k × k</small>
+          </div>
+          <div className="matrix-operator">×</div>
+          <div className="matrix-block matrix-v">
+            <span>V<sup>T</sup></span>
+            <small>k × n</small>
+          </div>
+        </div>
+        
         <div className="formula-box" style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
           <img src="https://latex.codecogs.com/svg.image?\LARGE&space;R\approx&space;U\Sigma&space;V^T" alt="SVD Decomposition Formula" />
         </div>

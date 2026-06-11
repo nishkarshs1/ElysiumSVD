@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import { Sun, Moon } from 'lucide-react'
 import BackendStatus from './components/BackendStatus'
@@ -62,12 +62,12 @@ function PageLayout({ children }) {
           <h1>ElysiumSVD</h1>
         </Link>
         <div className="nav-links">
-          <Link to="/">Inference Hub</Link>
-          <Link to="/maths">SVD Maths</Link>
-          <Link to="/architecture">Architecture</Link>
-          <Link to="/docs">Docs</Link>
-          <Link to="/simulation">Simulation</Link>
-          <Link to="/metrics">Metrics</Link>
+          <NavLink to="/" end>Inference Hub</NavLink>
+          <NavLink to="/maths">SVD Maths</NavLink>
+          <NavLink to="/architecture">Architecture</NavLink>
+          <NavLink to="/docs">Docs</NavLink>
+          <NavLink to="/simulation">Simulation</NavLink>
+          <NavLink to="/metrics">Metrics</NavLink>
           
           <button 
             onClick={() => setIsDark(!isDark)} 

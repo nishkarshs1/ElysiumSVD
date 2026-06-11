@@ -7,7 +7,7 @@ import './Simulation.css';
 export default function Simulation() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [epoch, setEpoch] = useState(0);
-  const [lossData, setLossData] = useState([{ epoch: 0, loss: 100 }]);
+  const [lossData, setLossData] = useState([{ epoch: 0, loss: 8.0 }]);
   const [activeStep, setActiveStep] = useState(0);
   
   const matrixRef = useRef(null);
@@ -26,7 +26,9 @@ export default function Simulation() {
       // Simulate loss dropping exponentially with some noise
       setLossData(currentData => {
         const lastLoss = currentData[currentData.length - 1].loss;
-        const newLoss = Math.max(5, lastLoss * 0.95 + (Math.random() * 2 - 1));
+        const target = 0.937;
+        const noise = (Math.random() * 0.1 - 0.05); // subtle noise
+        const newLoss = Math.max(0.9, (lastLoss - target) * 0.92 + target + noise);
         
         const newData = [...currentData, { epoch: nextEpoch, loss: newLoss }];
         // Keep last 50 points
@@ -59,7 +61,7 @@ export default function Simulation() {
     setIsPlaying(false);
     setEpoch(0);
     setActiveStep(0);
-    setLossData([{ epoch: 0, loss: 100 }]);
+    setLossData([{ epoch: 0, loss: 8.0 }]);
     setGridVals(initialGrid);
   };
 
@@ -211,7 +213,7 @@ export default function Simulation() {
                 <YAxis 
                   stroke="var(--text-secondary)" 
                   fontSize={12} 
-                  domain={[0, 100]} 
+                  domain={[0, 8]} 
                   tickLine={false}
                   axisLine={false}
                   label={{ value: 'MSE Loss', angle: -90, position: 'insideLeft', offset: -20, fill: 'var(--text-secondary)', fontSize: 13, fontWeight: 500 }}

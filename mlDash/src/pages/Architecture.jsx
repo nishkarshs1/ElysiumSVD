@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { Database, Network, Cpu, ShieldCheck } from 'lucide-react';
+import { Database, Network, Cpu, ShieldCheck, MonitorSmartphone, Server, ArrowRight, Zap, Sparkles } from 'lucide-react';
 import './Pages.css';
 
 export default function Architecture() {
@@ -45,6 +45,57 @@ export default function Architecture() {
           <ShieldCheck className="text-accent arch-icon" size={32} />
           <h3>4. Fast API Serving</h3>
           <p>The pre-computed matrices are loaded into memory by a <code>FastAPI</code> Python backend. The system calculates Cosine Similarity on the fly using high-performance <code>numpy.dot</code> operations, enabling sub-millisecond recommendation generation.</p>
+        </div>
+      </div>
+
+      <div className="flow-section" style={{ marginTop: '48px' }}>
+        <h3 style={{ fontSize: '1.8rem', marginBottom: '24px', color: 'var(--text-primary)' }}>Real-Time Inference Flow</h3>
+        <div className="glass-panel" style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', flexWrap: 'wrap', gap: '16px', padding: '40px 24px' }}>
+          
+          <div className="flow-step" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', flex: '1 1 150px' }}>
+            <div style={{ background: 'rgba(79, 70, 229, 0.1)', padding: '16px', borderRadius: '50%', color: 'var(--accent-color)' }}>
+              <MonitorSmartphone size={32} />
+            </div>
+            <h4 style={{ margin: 0, color: 'var(--text-primary)', textAlign: 'center' }}>1. Client Request</h4>
+            <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)', margin: 0 }}>React UI sends ID</p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }} className="flow-arrow">
+            <ArrowRight className="text-secondary" size={24} />
+          </div>
+
+          <div className="flow-step" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', flex: '1 1 150px' }}>
+            <div style={{ background: 'rgba(79, 70, 229, 0.1)', padding: '16px', borderRadius: '50%', color: 'var(--accent-color)' }}>
+              <Server size={32} />
+            </div>
+            <h4 style={{ margin: 0, color: 'var(--text-primary)', textAlign: 'center' }}>2. FastAPI Server</h4>
+            <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)', margin: 0 }}>Validates Request</p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }} className="flow-arrow">
+            <ArrowRight className="text-secondary" size={24} />
+          </div>
+
+          <div className="flow-step" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', flex: '1 1 150px' }}>
+            <div style={{ background: 'rgba(79, 70, 229, 0.1)', padding: '16px', borderRadius: '50%', color: 'var(--accent-color)' }}>
+              <Zap size={32} />
+            </div>
+            <h4 style={{ margin: 0, color: 'var(--text-primary)', textAlign: 'center' }}>3. Vector Math</h4>
+            <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)', margin: 0 }}>Cosine Similarity</p>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }} className="flow-arrow">
+            <ArrowRight className="text-secondary" size={24} />
+          </div>
+
+          <div className="flow-step" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', flex: '1 1 150px' }}>
+            <div style={{ background: 'rgba(79, 70, 229, 0.1)', padding: '16px', borderRadius: '50%', color: 'var(--accent-color)' }}>
+              <Sparkles size={32} />
+            </div>
+            <h4 style={{ margin: 0, color: 'var(--text-primary)', textAlign: 'center' }}>4. Delivery</h4>
+            <p style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)', margin: 0 }}>Top 5 Recommendations</p>
+          </div>
+
         </div>
       </div>
     </div>

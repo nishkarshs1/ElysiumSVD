@@ -1,30 +1,44 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import axios from 'axios';
 import gsap from 'gsap';
-import { Network, RefreshCw } from 'lucide-react';
+import { Network, RefreshCw, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import './LatentSpaceMap.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
-export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, selectedProduct, isFetching, onNodeClick, searchedNode, similarProducts }) {
+// Max nodes rendered in DOM to keep animations smooth
+const MAX_VISIBLE_NODES = 400;
+
+export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, selectedProduct, isFetching, onNodeClick, similarProducts, mapSimilarIds = [], clickedMovie = null, movieTitles = {} }) {
   const [points, setPoints] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   
   const CATEGORIES = ['All', 'Action', 'Comedy', 'Drama', 'Sci-Fi'];
-  // Deterministically assign a category based on product ID
   const getCategory = (id) => CATEGORIES[(id % (CATEGORIES.length - 1)) + 1];
   
   const mapRef = useRef(null);
   const linesRef = useRef(null);
+  const mapWrapperRef = useRef(null);
   const idleTweenRef = useRef(null);
   const fetchTweenRef = useRef(null);
+
+  const handleFullScreen = () => {
+    if (!mapWrapperRef.current) return;
+    if (!document.fullscreenElement) {
+      mapWrapperRef.current.requestFullscreen().catch(err => {
+        console.error("Error attempting to enable full-screen mode:", err.message);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
   const fetchMap = async () => {
     setLoading(true);
     setError('');
-    
     try {
       const response = await axios.get(`${API_BASE_URL}/api/v1/latent-space`);
       setPoints(response.data);
@@ -35,50 +49,63 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
     }
   };
 
-  useEffect(() => {
-    fetchMap();
-  }, []);
+  useEffect(() => { fetchMap(); }, []);
 
-  // Idle and Fetching Animations
+  // Build the set of "important" IDs that must always be shown
+  const importantIds = useMemo(() => {
+    const ids = new Set();
+    highlightedProducts.forEach(id => ids.add(id));
+    if (similarProducts) similarProducts.forEach(id => ids.add(id));
+    if (selectedProduct !== null) ids.add(selectedProduct);
+    mapSimilarIds.forEach(id => ids.add(id));
+    if (clickedMovie !== null) ids.add(clickedMovie);
+    return ids;
+  }, [highlightedProducts, similarProducts, selectedProduct, mapSimilarIds, clickedMovie]);
+
+  // Stable sampled set — only recompute when full points list changes
+  const sampledIds = useMemo(() => {
+    if (points.length === 0) return new Set();
+    // Deterministic sample: pick every N-th node so the visual spread is even
+    const step = Math.max(1, Math.floor(points.length / MAX_VISIBLE_NODES));
+    const ids = new Set();
+    for (let i = 0; i < points.length; i += step) {
+      ids.add(points[i].product_id);
+    }
+    return ids;
+  }, [points]);
+
+  // Final visible points = sampled ∪ important (important always shown)
+  const visiblePoints = useMemo(() => {
+    if (points.length === 0) return [];
+    return points.filter(p => sampledIds.has(p.product_id) || importantIds.has(p.product_id));
+  }, [points, sampledIds, importantIds]);
+
+  // Idle and Fetching Animations — only target rendered dots
   useEffect(() => {
-    if (points.length === 0 || !mapRef.current) return;
+    if (visiblePoints.length === 0 || !mapRef.current) return;
     const dots = mapRef.current.querySelectorAll('.latent-dot');
-    
+
     if (isFetching) {
-      // Stop idle animation
       if (idleTweenRef.current) idleTweenRef.current.kill();
-      
-      // Fast radar sweep pulse
       fetchTweenRef.current = gsap.to(dots, {
         scale: 1.5,
         opacity: 0.8,
-        backgroundColor: '#4F46E5', // Accent color
+        backgroundColor: '#4F46E5',
         duration: 0.4,
         ease: 'power2.inOut',
-        stagger: {
-          each: 0.01,
-          from: 'center',
-          grid: 'auto',
-          yoyo: true,
-          repeat: -1
-        }
+        stagger: { each: 0.005, from: 'center', grid: 'auto', yoyo: true, repeat: -1 }
       });
     } else {
-      // Stop fetching animation
       if (fetchTweenRef.current) fetchTweenRef.current.kill();
-      
-      // Reset dots
       gsap.to(dots, { scale: 1, backgroundColor: '', opacity: '', duration: 0.5 });
-      
-      // Start/Resume idle floating
       idleTweenRef.current = gsap.to(dots, {
-        y: 'random(-5, 5)',
-        x: 'random(-5, 5)',
-        duration: 'random(2, 4)',
+        y: 'random(-4, 4)',
+        x: 'random(-4, 4)',
+        duration: 'random(2.5, 4.5)',
         ease: 'sine.inOut',
         repeat: -1,
         yoyo: true,
-        stagger: { amount: 2, from: 'random' }
+        stagger: { amount: 3, from: 'random' }
       });
     }
 
@@ -86,20 +113,20 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
       if (idleTweenRef.current) idleTweenRef.current.kill();
       if (fetchTweenRef.current) fetchTweenRef.current.kill();
     };
-  }, [points, isFetching]);
+  }, [visiblePoints, isFetching]);
 
-  // Scatter reveal on mount
+  // Scatter reveal — only runs when sampled set first populates
   useEffect(() => {
-    if (points.length > 0 && mapRef.current) {
+    if (visiblePoints.length > 0 && mapRef.current) {
       const dots = mapRef.current.querySelectorAll('.latent-dot');
       gsap.fromTo(dots,
         { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 0.6, duration: 1, stagger: 0.002, ease: 'back.out(2)' }
+        { scale: 1, opacity: 0.6, duration: 0.8, stagger: 0.001, ease: 'back.out(2)' }
       );
     }
-  }, [points.length]);
+  }, [sampledIds]); // only re-trigger on full resample, not every highlight
 
-  // Calculate scaling ranges
+  // Calculate scaling ranges from ALL points for correct coordinate mapping
   const scales = useMemo(() => {
     if (points.length === 0) return null;
     const xs = points.map(p => p.coordinates.x);
@@ -114,31 +141,27 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
     };
   }, [points]);
 
-  // Draw Constellation Web for Recommendations
+  // Constellation Web — uses ALL points for accurate positions
   useEffect(() => {
     if (highlightedProducts.length < 2 || !scales || !linesRef.current) {
       if (linesRef.current) linesRef.current.innerHTML = '';
       return;
     }
-
     linesRef.current.innerHTML = '';
     const lines = [];
     const validPoints = highlightedProducts
       .map(id => points.find(p => p.product_id === id))
       .filter(Boolean);
 
-    // Draw lines connecting each highlighted point to all others (forming a web)
     for (let i = 0; i < validPoints.length; i++) {
       for (let j = i + 1; j < validPoints.length; j++) {
         const p1 = validPoints[i];
         const p2 = validPoints[j];
-
         const x1 = 5 + ((p1.coordinates.x - scales.minX) / scales.rangeX) * 90;
         const y1 = 95 - ((p1.coordinates.y - scales.minY) / scales.rangeY) * 90;
         const x2 = 5 + ((p2.coordinates.x - scales.minX) / scales.rangeX) * 90;
         const y2 = 95 - ((p2.coordinates.y - scales.minY) / scales.rangeY) * 90;
-
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', `${x1}%`);
         line.setAttribute('y1', `${y1}%`);
         line.setAttribute('x2', `${x2}%`);
@@ -148,56 +171,55 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
         lines.push(line);
       }
     }
-
-    // Modern glowing draw-in animation for lines
     gsap.fromTo(lines,
       { strokeDasharray: 100, strokeDashoffset: 100, opacity: 0 },
       { strokeDashoffset: 0, opacity: 0.6, duration: 1.5, stagger: 0.1, ease: 'power3.out' }
     );
-
   }, [highlightedProducts, points, scales]);
-
 
   const renderDots = () => {
     if (!scales) return null;
 
-    return points.map((p) => {
+    return visiblePoints.map((p) => {
       const xPercent = 5 + ((p.coordinates.x - scales.minX) / scales.rangeX) * 90;
       const yPercent = 95 - ((p.coordinates.y - scales.minY) / scales.rangeY) * 90;
-      
+
       const isHighlighted = highlightedProducts.includes(p.product_id);
       const isSelected = selectedProduct === p.product_id;
-      const isHovered = hoveredProduct === p.product_id;
-      const isSearched = searchedNode === p.product_id;
+      const isHovered = hoveredProduct?.id === p.product_id;
       const isSimilar = similarProducts && similarProducts.includes(p.product_id);
-      const hasSearch = highlightedProducts.length > 0 || searchedNode !== null;
+      const isMapSimilar = mapSimilarIds.includes(p.product_id);
+      const isClicked = clickedMovie === p.product_id;
+      const hasSearch = highlightedProducts.length > 0 || mapSimilarIds.length > 0 || clickedMovie !== null;
       const nodeCategory = getCategory(p.product_id);
       const matchesCategory = selectedCategory === 'All' || nodeCategory === selectedCategory;
 
-      let className = "latent-dot";
+      let className = 'latent-dot';
       if (!isFetching) {
         if (!matchesCategory) {
-          className += " filtered-out";
+          className += ' filtered-out';
         } else if (hasSearch) {
-          if (isSearched) className += " searched";
-          else if (isSimilar) className += " similar-result";
-          else if (isSelected || isHovered) className += " selected";
-          else if (isHighlighted) className += " highlighted";
-          else className += " dimmed";
+          if (isHovered) {
+            className += (hoveredProduct?.source === 'row') ? ' hovered-node' : ' selected';
+          }
+          else if (isClicked) className += ' clicked-node';
+          else if (isSimilar) className += ' similar-result';
+          else if (isMapSimilar) className += ' map-similar-result';
+          else if (isSelected) className += ' selected';
+          else if (isHighlighted) className += ' highlighted';
+          else className += ' dimmed';
         }
       }
 
       return (
-        <div 
+        <div
           key={p.product_id}
           className={className}
-          style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
-          title={`Movie ${p.product_id} (${nodeCategory})`}
-          onClick={() => {
-            if (onNodeClick) onNodeClick(p.product_id);
-          }}
+          style={{ left: `${xPercent}%`, top: `${yPercent}%`, willChange: 'transform' }}
+          title={`${movieTitles[p.product_id] || 'Movie ' + p.product_id} (${nodeCategory})`}
+          onClick={() => { if (onNodeClick) onNodeClick(p.product_id); }}
         >
-          <div className="dot-tooltip">Movie #{p.product_id} <br/><span style={{fontSize:'10px', color:'var(--text-secondary)'}}>{nodeCategory}</span></div>
+          <div className="dot-tooltip">{movieTitles[p.product_id] || `Movie #${p.product_id}`} <br/><span style={{fontSize:'10px', color:'var(--text-secondary)'}}>{nodeCategory}</span></div>
         </div>
       );
     });
@@ -211,7 +233,7 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
           <h2>Live Latent Space</h2>
         </div>
         <div className="latent-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <select 
+          <select
             className="category-filter"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -223,28 +245,51 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
           </button>
         </div>
       </div>
-      
+
       <p className="latent-desc">
-        A 2D projection of how the matrix factorization model clusters movies. {points.length > 0 && `Tracking ${points.length} nodes.`}
+        A 2D projection of how the model clusters {points.length > 0 ? `${points.length.toLocaleString()} movies` : 'movies'}. Showing {visiblePoints.length} representative nodes.
       </p>
 
       {error ? (
         <div className="error-message">{error}</div>
       ) : (
-        <div className="map-area">
-          <svg className="map-connections-layer" ref={linesRef} width="100%" height="100%" />
-          
-          <div ref={mapRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-            {loading && points.length === 0 ? (
-              <div className="map-loading">Initializing Matrix...</div>
-            ) : (
+        <div ref={mapWrapperRef} className="map-area" style={{ width: '100%', height: '100%', position: 'relative', flex: 1, overflow: 'hidden', minHeight: '400px', backgroundColor: 'var(--bg-color)' }}>
+          <TransformWrapper
+            initialScale={1}
+            minScale={1}
+            maxScale={30}
+            centerOnInit={true}
+            wheel={{ step: 0.1 }}
+            doubleClick={{ disabled: true }}
+            panning={{ velocityDisabled: false }}
+          >
+            {({ zoomIn, zoomOut, resetTransform }) => (
               <>
-                <div className="grid-lines"></div>
-                <div className="grid-lines horizontal"></div>
-                {renderDots()}
+                <div className="zoom-controls" style={{ position: 'absolute', right: '16px', bottom: '16px', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(31,41,55,0.8)', padding: '8px', borderRadius: '12px', backdropFilter: 'blur(8px)' }}>
+                  <button className="icon-btn" onClick={() => zoomIn()} title="Zoom In"><ZoomIn size={20} /></button>
+                  <button className="icon-btn" onClick={() => zoomOut()} title="Zoom Out"><ZoomOut size={20} /></button>
+                  <button className="icon-btn" onClick={() => resetTransform()} title="Reset Map"><RefreshCw size={20} /></button>
+                  <button className="icon-btn" onClick={handleFullScreen} title="Toggle Fullscreen"><Maximize size={20} /></button>
+                </div>
+                <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }} contentStyle={{ width: '100%', height: '100%' }}>
+                  <div style={{ width: '100%', height: '100%', minHeight: '400px', position: 'relative' }}>
+                    <svg className="map-connections-layer" ref={linesRef} width="100%" height="100%" />
+                    <div ref={mapRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+                      {loading && points.length === 0 ? (
+                        <div className="map-loading">Initializing Matrix...</div>
+                      ) : (
+                        <>
+                          <div className="grid-lines"></div>
+                          <div className="grid-lines horizontal"></div>
+                          {renderDots()}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </TransformComponent>
               </>
             )}
-          </div>
+          </TransformWrapper>
         </div>
       )}
     </div>

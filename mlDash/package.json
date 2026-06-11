@@ -19,6 +19,7 @@
     "react-dom": "^19.2.6",
     "react-katex": "^3.1.0",
     "react-router-dom": "^7.17.0",
+    "react-zoom-pan-pinch": "^4.0.3",
     "recharts": "^3.8.1"
   },
   "devDependencies": {

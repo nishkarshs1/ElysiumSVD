@@ -76,11 +76,12 @@ export default function Metrics() {
           <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer>
               <BarChart data={barData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--card-border)" />
                 <XAxis dataKey="name" stroke="var(--text-secondary)" tickLine={false} />
                 <YAxis stroke="var(--text-secondary)" tickLine={false} axisLine={false} />
                 <RechartsTooltip 
                   contentStyle={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '8px', color: 'var(--text-primary)' }}
+                  cursor={{ fill: 'var(--accent-color)', fillOpacity: 0.1 }}
                 />
                 <Legend wrapperStyle={{ paddingTop: '20px' }}/>
                 <Bar dataKey="Popularity" fill="var(--text-secondary)" radius={[4, 4, 0, 0]} />

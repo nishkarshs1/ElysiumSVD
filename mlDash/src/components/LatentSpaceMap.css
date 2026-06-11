@@ -65,6 +65,18 @@
   z-index: 5;
 }
 
+.constellation-line {
+  stroke: var(--accent-color);
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+.constellation-line.map-similar-line {
+  stroke: #f59e0b;
+  stroke-width: 2;
+  opacity: 0.7;
+}
+
 .hover-connection-line {
   stroke: var(--accent-color);
   stroke-width: 1.5;
@@ -179,5 +191,9 @@
   letter-spacing: 2px;
   font-family: monospace;
 }
-.latent-dot.searched { background: #f97316; opacity: 1 !important; width: 14px; height: 14px; box-shadow: 0 0 20px #f97316; z-index: 30; } .latent-dot.similar-result { background: #10b981; opacity: 1 !important; width: 10px; height: 10px; box-shadow: 0 0 15px #10b981; z-index: 25; }
+.latent-dot.searched { background: #f97316; opacity: 1 !important; width: 14px; height: 14px; box-shadow: 0 0 20px #f97316; z-index: 30; } 
+.latent-dot.similar-result { background: #10b981; opacity: 1 !important; width: 10px; height: 10px; box-shadow: 0 0 15px #10b981; z-index: 25; }
+.latent-dot.map-similar-result { background: #f59e0b; opacity: 1 !important; width: 10px; height: 10px; box-shadow: 0 0 15px #f59e0b; z-index: 25; }
+.latent-dot.clicked-node { background: #ef4444; opacity: 1 !important; width: 14px; height: 14px; box-shadow: 0 0 20px #ef4444; z-index: 30; }
+.latent-dot.hovered-node { background: #ec4899; opacity: 1 !important; width: 16px; height: 16px; box-shadow: 0 0 25px #ec4899; z-index: 40; }
 .category-filter { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--card-border); background: var(--bg-color); color: var(--text-primary); font-size: 0.85rem; outline: none; cursor: pointer; transition: border-color 0.2s; } .category-filter:focus { border-color: var(--accent-color); } .latent-dot.filtered-out { opacity: 0.05 !important; transform: scale(0.5) !important; pointer-events: none; z-index: 1; }

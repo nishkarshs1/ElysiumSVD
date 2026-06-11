@@ -24,7 +24,7 @@ export default function Documentation() {
       <div className="doc-section glass-panel" style={{ marginBottom: '32px' }}>
         <h3>Technology Stack</h3>
         <ul style={{ paddingLeft: '24px', color: 'var(--text-secondary)', marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <li><strong>Frontend:</strong> React 18, Vite, GSAP (Animations), Recharts (Data Visualization), Lucide React (Icons).</li>
+          <li><strong>Frontend:</strong> React 18, Vite, GSAP (Animations), Recharts (Data Visualization), Lucide React (Icons), React Zoom Pan Pinch (Map Navigation).</li>
           <li><strong>Backend API:</strong> FastAPI (Python 3), Uvicorn.</li>
           <li><strong>Machine Learning:</strong> Scipy (<code>scipy.sparse.linalg.svds</code>), Numpy (Vector operations), Pandas (Data parsing), Scikit-Learn (Evaluation metrics).</li>
           <li><strong>Persistence:</strong> Joblib (Pickle serialization for instant model loading).</li>
@@ -36,15 +36,23 @@ export default function Documentation() {
           <span className="method get">GET</span>
           <span className="path">/recommend/&#123;user_id&#125;</span>
         </div>
-        <p className="doc-desc">Returns top N recommended movies for a given user. If the user is not found in the latent matrix, a fallback array of globally popular movies is returned along with the cold_start flag set to true.</p>
+        <p className="doc-desc">
+          Returns top N recommended movies for a given user. If the user is not found in the latent matrix, a fallback array of globally popular movies is returned along with the cold_start flag set to true. 
+          <br/><br/>
+          <strong style={{color: 'var(--accent-color)'}}>Note on "N":</strong> The backend is flexible and can return any number of movies via the <code>?n=</code> query parameter. However, our React frontend is hardcoded to request exactly 5 (<code>?n=5</code>) to keep the UI clean and readable.
+        </p>
       </div>
 
       <div className="doc-section glass-panel">
         <div className="endpoint-header">
           <span className="method get">GET</span>
-          <span className="path">/similar/&#123;product_id&#125;</span>
+          <span className="path">/similar/&#123;movie_id&#125;</span>
         </div>
-        <p className="doc-desc">Returns N movies most similar to the provided product_id, utilizing cosine similarity across the item latent factor matrix.</p>
+        <p className="doc-desc">
+          Returns N movies most similar to the provided movie_id, utilizing cosine similarity across the item latent factor matrix.
+          <br/><br/>
+          <strong style={{color: 'var(--accent-color)'}}>Note on "N":</strong> Like the recommendation endpoint, this accepts a variable <code>?n=</code> parameter, but the frontend explicitly asks for 5 similar movies.
+        </p>
       </div>
 
       <div className="doc-section glass-panel">
@@ -61,6 +69,14 @@ export default function Documentation() {
           <span className="path">/health</span>
         </div>
         <p className="doc-desc">Standard health check endpoint used to calculate system latency and uptime status.</p>
+      </div>
+
+      <div className="doc-section glass-panel">
+        <div className="endpoint-header">
+          <span className="method get">GET</span>
+          <span className="path">/movies</span>
+        </div>
+        <p className="doc-desc">Retrieves a dictionary mapping of all movie IDs to their human-readable string titles for frontend display mapping.</p>
       </div>
     </div>
   );

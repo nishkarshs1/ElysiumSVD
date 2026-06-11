@@ -44,8 +44,14 @@
   transition: color 0.2s ease;
 }
 
-.nav-links a:hover {
+.nav-links a:hover, .nav-links a.active {
   color: var(--accent-color);
+}
+
+.nav-links a.active {
+  font-weight: 600;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 4px;
 }
 
 .app-header {

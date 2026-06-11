@@ -10,6 +10,7 @@ from app.recommender import (
     get_recommendations,
     get_similar_products,
     get_latent_space,
+    get_movie_titles,
 )
 
 
@@ -23,7 +24,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="ML Recommender API",
-    description="Matrix Factorization (SVD) based product recommendations",
+    description="Matrix Factorization (SVD) based movie recommendations — MovieLens 1M",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -64,7 +65,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://elysiumsvd.vercel.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -130,5 +131,17 @@ def latent_space() -> list[LatentSpacePoint]:
     try:
         points = get_latent_space()
         return [LatentSpacePoint(**p) for p in points]
+    except ValueError as e:
+        raise HTTPException(status_code=503, detail=str(e))
+
+
+@app.get("/movies")
+def movies() -> dict:
+    """
+    Returns a mapping of product_id (0-indexed int) to movie title string.
+    Frontend uses this to display real movie names.
+    """
+    try:
+        return get_movie_titles()
     except ValueError as e:
         raise HTTPException(status_code=503, detail=str(e))

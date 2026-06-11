@@ -13,6 +13,7 @@ export default function ProductList({
   setSelectedProduct,
   setHoveredProduct,
   onSimilarFetch,
+  movieTitles = {},
 }) {
   const listRef = useRef(null);
   const [similarProducts, setSimilarProducts] = useState(null);
@@ -46,6 +47,7 @@ export default function ProductList({
     if (selectedProduct === productId) {
       setSelectedProduct(null);
       setSimilarProducts(null);
+      if (onSimilarFetch) onSimilarFetch(null);
       return;
     }
 
@@ -98,14 +100,14 @@ export default function ProductList({
             key={productId}
             className={`product-card glass-panel ${selectedProduct === productId ? "selected" : ""}`}
             onClick={() => fetchSimilar(productId)}
-            onMouseEnter={() => setHoveredProduct(productId)}
+            onMouseEnter={() => setHoveredProduct({ id: productId, source: 'card' })}
             onMouseLeave={() => setHoveredProduct(null)}
           >
             <div className="product-icon">
               <Package size={28} />
             </div>
             <div className="product-info">
-              <h3>Movie #{productId}</h3>
+              <h3>{movieTitles[productId] || `Movie #${productId}`}</h3>
               <span className="view-similar">
                 {selectedProduct === productId
                   ? "Hide Similar"
@@ -133,7 +135,7 @@ export default function ProductList({
       {selectedProduct && !loading && similarProducts && (
         <div className="similar-container glass-panel">
           <div className="similar-header">
-            <h3>Similar to #{selectedProduct}</h3>
+            <h3>Similar to {movieTitles[selectedProduct] || `#${selectedProduct}`}</h3>
           </div>
 
           <div className="similar-list">
@@ -141,11 +143,12 @@ export default function ProductList({
               <div
                 key={`${item.product_id}-${index}`}
                 className="similar-item"
-                onMouseEnter={() => setHoveredProduct(item.product_id)}
+                onClick={() => setHoveredProduct({ id: item.product_id, source: 'row' })}
+                onMouseEnter={() => setHoveredProduct({ id: item.product_id, source: 'row' })}
                 onMouseLeave={() => setHoveredProduct(null)}
               >
                 <Package size={18} className="text-secondary" />
-                <span className="item-id">Movie #{item.product_id}</span>
+                <span className="item-id">{movieTitles[item.product_id] || `Movie #${item.product_id}`}</span>
                 <div className="similarity-bar">
                   <div
                     className="similarity-fill"

@@ -9,9 +9,10 @@ sigma: Optional[np.ndarray] = None
 Vt: Optional[np.ndarray] = None
 ratings_df: Optional[pd.DataFrame] = None
 user_ratings_mean: Optional[np.ndarray] = None
+movie_titles: Optional[dict] = None
 
 def load_model():
-    global U, sigma, Vt, ratings_df, user_ratings_mean
+    global U, sigma, Vt, ratings_df, user_ratings_mean, movie_titles
     
     CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) # Pointing to 'app/'
     BASE_DIR = os.path.dirname(CURRENT_DIR)                  # Pointing to 'mlRecommender/' root
@@ -22,8 +23,9 @@ def load_model():
     U = joblib.load(os.path.join(MODEL_DIR, "U.pkl"))
     sigma = joblib.load(os.path.join(MODEL_DIR, "sigma.pkl"))
     Vt = joblib.load(os.path.join(MODEL_DIR, "Vt.pkl"))
-    ratings_df = joblib.load(os.path.join(MODEL_DIR, "ratings_df.csv"))
+    ratings_df = joblib.load(os.path.join(MODEL_DIR, "ratings_df.pkl"))
     user_ratings_mean = joblib.load(os.path.join(MODEL_DIR, "user_ratings_mean.pkl"))
+    movie_titles = joblib.load(os.path.join(MODEL_DIR, "movie_titles.pkl"))
 
     print("Model loaded successfully")
 
@@ -111,3 +113,9 @@ def get_latent_space() -> list[dict]:
     ]
 
     return result
+
+def get_movie_titles() -> dict:
+    """Returns the full {product_id: title} mapping."""
+    if movie_titles is None:
+        raise ValueError("Movie titles not loaded. Call load_model() first.")
+    return movie_titles
