@@ -36,7 +36,7 @@ What makes this project different: it doesn't just show results. It teaches the 
 **Latent Space Map** - 2D constellation of 3,706 movie vectors; click any node for recommendations
 <img src="screenshots/latent_space.png" alt="Latent Space" width="500">
 
-**Matrix Training Simulation** - Live SGD loss curve dropping from MSE 8.0 → 0.937
+**Matrix Training Simulation** - Live SGD loss curve dropping from MSE 8.0 -> 0.937
 <img src="screenshots/simulation.png" alt="Training Simulation" width="500">
 
 **Model Evaluation Metrics** - RMSE 0.9682, Precision@10 72.66%, NDCG@10 0.7787 vs Popularity Baseline
@@ -64,11 +64,11 @@ User Request
 React Frontend (Vercel - global edge CDN)
      ↓  axios
 FastAPI Backend (Render - Dockerized)
-     ├── /recommend/{user_id}    →  Mean-centered SVD matrix → top-N unseen movies
-     ├── /similar/{movie_id}   →  Cosine similarity on item latent vectors (Vt)
-     ├── /api/v1/latent-space    →  2D coordinates for all 3,706 movies
-     ├── /movies                 →  movie_id → movie title mapping
-     └── /health                 →  Status check
+     ├── /recommend/{user_id}    ->  Mean-centered SVD matrix -> top-N unseen movies
+     ├── /similar/{movie_id}   ->  Cosine similarity on item latent vectors (Vt)
+     ├── /api/v1/latent-space    ->  2D coordinates for all 3,706 movies
+     ├── /movies                 ->  movie_id -> movie title mapping
+     └── /health                 ->  Status check
      ↓
 Precomputed Matrices (loaded into RAM at boot)
 [ U (6040×50) ]  [ Σ (50×50) ]  [ Vt (50×3706) ]  [ user_ratings_mean (6040×1) ]
@@ -90,9 +90,9 @@ R_predicted = U · Σ · Vt + user_ratings_mean
 | `Vt`                | 50 × 3706 | Item latent factor matrix                 |
 | `user_ratings_mean` | 6040 × 1  | Per-user mean rating (for mean centering) |
 
-**Recommendations** → predicted ratings row for user, exclude already-rated, return top-N  
-**Similar movies** → Cosine similarity between columns of `Vt` (item latent vectors)  
-**Latent Space Map** → first 2 dimensions of `Vt` projected to 2D
+**Recommendations** -> predicted ratings row for user, exclude already-rated, return top-N  
+**Similar movies** -> Cosine similarity between columns of `Vt` (item latent vectors)  
+**Latent Space Map** -> first 2 dimensions of `Vt` projected to 2D
 
 ## 🔌 API Reference
 
@@ -106,13 +106,13 @@ R_predicted = U · Σ · Vt + user_ratings_mean
   "recommendations": [0, 2748, 2162, 2511, 1449],
   "cold_start": false
 }
-// → Toy Story (1995), Fight Club (1999), A Bug's Life (1998),
+// -> Toy Story (1995), Fight Club (1999), A Bug's Life (1998),
 //   Ghostbusters (1984), Men in Black (1997)
 ```
 
 - `n`: 1-20, default 5
 - Already-rated movies excluded from results
-- `cold_start: true` → returns globally popular movies for unknown users
+- `cold_start: true` -> returns globally popular movies for unknown users
 
 ### `GET /similar/{movie_id}?n=5`
 
@@ -129,7 +129,7 @@ R_predicted = U · Σ · Vt + user_ratings_mean
     { "movie_id": 1536, "similarity": 0.371 }
   ]
 }
-// → Reservoir Dogs (1992), GoodFellas (1990), Fargo (1996),
+// -> Reservoir Dogs (1992), GoodFellas (1990), Fargo (1996),
 //   True Romance (1993), Boogie Nights (1997)
 ```
 
@@ -179,10 +179,10 @@ R_predicted = U · Σ · Vt + user_ratings_mean
 
 | Page                           | What it does                                                                                                             |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| **Inference Hub**              | Enter User ID (0–6039) → get top-5 movie recommendations with titles and similarity scores; interactive Latent Space Map |
-| **Matrix Training Simulation** | Live animated SGD training loop - flashing weight grid, loss curve dropping MSE 8.0 → 0.937, epoch counter               |
+| **Inference Hub**              | Enter User ID (0–6039) -> get top-5 movie recommendations with titles and similarity scores; interactive Latent Space Map |
+| **Matrix Training Simulation** | Live animated SGD training loop - flashing weight grid, loss curve dropping MSE 8.0 -> 0.937, epoch counter               |
 | **SVD Mathematics**            | Visual CSS matrix decomposition block (R ≈ U·Σ·Vt), cosine similarity formula, gradient descent update rules             |
-| **System Architecture**        | End-to-end data pipeline diagram: ingestion → training → serialization → FastAPI serving                                 |
+| **System Architecture**        | End-to-end data pipeline diagram: ingestion -> training -> serialization -> FastAPI serving                                 |
 | **API Docs**                   | Interactive endpoint explorer with live `/health` ping                                                                   |
 | **Metrics**                    | RMSE, Precision@10, Recall@10, NDCG@10 - SVD vs Popularity Baseline bar chart + qualitative radar                        |
 
