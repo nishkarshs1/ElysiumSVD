@@ -6,7 +6,7 @@
 [![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com)
 [![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python)](https://python.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org)
-[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)](https://docker.com)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)](https://hub.docker.com/u/nishkarshs1)
 
 ## 🧠 What is ElysiumSVD?
 
@@ -94,32 +94,48 @@ R_predicted = U · Σ · Vt + user_ratings_mean
 ### `GET /recommend/{user_id}?n=5`
 
 ```json
+// GET /recommend/42?n=5
+// "What should User #42 watch next?"
 {
   "user_id": 42,
-  "recommendations": [124, 853, 19, 442, 10],
+  "recommendations": [0, 2748, 2162, 2511, 1449],
   "cold_start": false
 }
+// → Toy Story (1995), Fight Club (1999), A Bug's Life (1998),
+//   Ghostbusters (1984), Men in Black (1997)
 ```
 
-- `n`: 1–20, default 5
+- `n`: 1-20, default 5
 - Already-rated movies excluded from results
 - `cold_start: true` → returns globally popular movies for unknown users
 
 ### `GET /similar/{movie_id}?n=5`
 
 ```json
+// GET /similar/287?n=5
+// "Find movies similar to Pulp Fiction (1994)"
 {
-  "movie_id": 124,
+  "movie_id": 287,
   "similar": [
-    { "movie_id": 853, "similarity": 0.985 },
-    { "movie_id": 19, "similarity": 0.942 }
+    { "movie_id": 1017, "similarity": 0.7205 },
+    { "movie_id": 1123, "similarity": 0.6149 },
+    { "movie_id": 593, "similarity": 0.5134 },
+    { "movie_id": 541, "similarity": 0.3843 },
+    { "movie_id": 1536, "similarity": 0.371 }
   ]
 }
+// → Reservoir Dogs (1992), GoodFellas (1990), Fargo (1996),
+//   True Romance (1993), Boogie Nights (1997)
 ```
+
+- `n`: number of similar movies to return (default 5)
+- Self-match excluded (Pulp Fiction won't appear in its own results)
 
 ### `GET /movies`
 
 ```json
+// GET /movies
+// "Get the mapping of IDs to movie titles"
 {
   "0": "Toy Story (1995)",
   "1": "Jumanji (1995)",
@@ -127,15 +143,32 @@ R_predicted = U · Σ · Vt + user_ratings_mean
 }
 ```
 
+- Returns a complete dictionary mapping every `movie_id` to its actual title string.
+- Used by the frontend to instantly resolve IDs to human-readable names.
+
 ### `GET /api/v1/latent-space`
 
-Returns 2D coordinates for all 3,706 movies for the constellation map.
+```json
+// GET /api/v1/latent-space
+// "Get 2D projection coordinates for the constellation map"
+[
+  {
+    "movie_id": 0,
+    "coordinates": { "x": 0.145, "y": -0.832 }
+  }
+]
+```
+
+- Returns the first two principal components (2D coordinates) of the latent vector for all 3,706 movies.
+- Used by the frontend to plot the interactive Latent Space Map.
 
 ### `GET /health`
 
 ```json
 { "status": "ok" }
 ```
+
+- Simple ping endpoint to check if the FastAPI backend is alive and the model matrices are successfully loaded into RAM.
 
 ## 🌐 Pages & Features
 
@@ -174,7 +207,35 @@ Returns 2D coordinates for all 3,706 movies for the constellation map.
 | React Router    | Client-side routing                  |
 | Lucide React    | Icons                                |
 
-## 🚀 Running Locally
+## 🐳 Running with Docker (Recommended)
+
+Both the frontend and backend are fully Dockerized for a flawless out-of-the-box experience. You can pull the pre-built images directly from my [Docker Hub Profile](https://hub.docker.com/u/nishkarshs1) (zero setup required).
+
+### Backend (Port 10000)
+
+```bash
+# Just run it instantly:
+docker run -p 10000:10000 nishkarshs1/elysiumSVD:backend
+
+# Or if you want to build it yourself from source:
+# cd mlRecommender
+# docker build -t elysium-backend .
+# docker run -p 10000:10000 elysium-backend
+```
+
+### Frontend (Port 5173)
+
+```bash
+# Just run it instantly:
+docker run -p 5173:5173 nishkarshs1/elysiumSVD:frontend
+
+# Or if you want to build it yourself from source:
+# cd mlDash
+# docker build -t elysium-frontend .
+# docker run -p 5173:5173 elysium-frontend
+```
+
+## 🚀 Running Locally (Manual)
 
 ### Backend
 
@@ -192,7 +253,7 @@ npm install
 npm run dev
 ```
 
-Set backend URL to `http://localhost:8000` in your frontend config.
+_(If running manually, the frontend will default to targeting `localhost:8000` for the API)._
 
 ## 📁 Project Structure
 

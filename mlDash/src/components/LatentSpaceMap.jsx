@@ -265,7 +265,7 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
           >
             {({ zoomIn, zoomOut, resetTransform }) => (
               <>
-                <div className="zoom-controls" style={{ position: 'absolute', right: '16px', bottom: '16px', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(31,41,55,0.8)', padding: '8px', borderRadius: '12px', backdropFilter: 'blur(8px)' }}>
+                <div className="zoom-controls" style={{ position: 'absolute', right: '16px', bottom: '16px', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '8px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', padding: '8px', borderRadius: '12px', backdropFilter: 'blur(8px)' }}>
                   <button className="icon-btn" onClick={() => zoomIn()} title="Zoom In"><ZoomIn size={20} /></button>
                   <button className="icon-btn" onClick={() => zoomOut()} title="Zoom Out"><ZoomOut size={20} /></button>
                   <button className="icon-btn" onClick={() => resetTransform()} title="Reset Map"><RefreshCw size={20} /></button>

@@ -67,5 +67,3 @@
   gap: 32px;
 }
 .theme-toggle { background: rgba(79, 70, 229, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color); padding: 8px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; margin-left: 16px; } .theme-toggle:hover { background: var(--accent-color); color: white; transform: rotate(15deg); }
-
-[data-theme='dark'] .top-navbar { background: #1E293B !important; }

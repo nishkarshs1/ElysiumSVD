@@ -11,6 +11,11 @@
   font-weight: 500;
   z-index: 1000;
   transition: all 0.3s ease;
+  opacity: 0.75;
+}
+
+.backend-status:hover {
+  opacity: 1;
 }
 
 .backend-status.online {
