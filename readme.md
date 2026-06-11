@@ -1,5 +1,8 @@
-# ElysiumSVD 🎬
+<div align="center">
+  <img src="mlDash/public/favicon.svg" alt="ElysiumSVD Logo" width="120" height="120" />
+</div>
 
+# ElysiumSVD 🎬
 ### A Production-Grade Movie Recommendation Engine with Latent Space Visualization
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://elysiumsvd.vercel.app)
@@ -215,7 +218,7 @@ Both the frontend and backend are fully Dockerized for a flawless out-of-the-box
 
 ```bash
 # Just run it instantly:
-docker run -p 10000:10000 nishkarshs1/elysiumSVD:backend
+docker run -p 10000:10000 nishkarshs1/elysiumsvd:backend
 
 # Or if you want to build it yourself from source:
 # cd mlRecommender
@@ -227,7 +230,7 @@ docker run -p 10000:10000 nishkarshs1/elysiumSVD:backend
 
 ```bash
 # Just run it instantly:
-docker run -p 5173:5173 nishkarshs1/elysiumSVD:frontend
+docker run -p 5173:5173 nishkarshs1/elysiumsvd:frontend
 
 # Or if you want to build it yourself from source:
 # cd mlDash
