@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
-import { Target, Activity, TrendingUp, BarChart2 } from 'lucide-react';
+import { Target, Activity, TrendingUp, BarChart2, RefreshCw } from 'lucide-react';
 import './Pages.css';
 
 export default function Metrics() {
@@ -17,16 +17,16 @@ export default function Metrics() {
   }, []);
 
   const barData = [
-    { name: 'Precision@10', Popularity: 0.12, SVD: 0.38 },
-    { name: 'Recall@10', Popularity: 0.08, SVD: 0.31 },
-    { name: 'NDCG@10', Popularity: 0.15, SVD: 0.42 },
+    { name: 'Precision@10', Popularity: 0.12, SVD: 0.7266 },
+    { name: 'Recall@10', Popularity: 0.08, SVD: 0.1430 },
+    { name: 'NDCG@10', Popularity: 0.15, SVD: 0.7787 },
   ];
 
   const radarData = [
     { subject: 'Cold Start Handling', A: 40, B: 85, fullMark: 100 },
     { subject: 'Diversity', A: 30, B: 90, fullMark: 100 },
     { subject: 'Novelty', A: 20, B: 80, fullMark: 100 },
-    { subject: 'Accuracy', A: 50, B: 95, fullMark: 100 },
+    { subject: 'Accuracy', A: 50, B: 78, fullMark: 100 },
     { subject: 'Scalability', A: 90, B: 85, fullMark: 100 },
   ];
 
@@ -41,18 +41,23 @@ export default function Metrics() {
       <div className="info-cards-container" style={{ marginBottom: '32px' }}>
         <div className="info-card glass-panel">
           <div className="info-icon text-accent"><Target size={24} /></div>
-          <h4>RMSE: 3.25</h4>
-          <p>Root Mean Square Error against the Test Set. Pulled directly from your Jupyter Notebook evaluation! Because your dataset is randomly generated, the error is higher than a real dataset.</p>
+          <h4>RMSE: 0.9682</h4>
+          <p>Root Mean Square Error against the Test Set. Evaluated on 20% holdout set of 1 million real MovieLens ratings.</p>
         </div>
         <div className="info-card glass-panel">
           <div className="info-icon text-accent"><TrendingUp size={24} /></div>
-          <h4>Precision@10: 38%</h4>
-          <p>Out of the top 10 items recommended, 3.8 on average are highly relevant to the user's specific tastes.</p>
+          <h4>Precision@10: 72.66%</h4>
+          <p>Out of the top 10 items recommended, 7.3 on average are highly relevant to the user's specific tastes.</p>
+        </div>
+        <div className="info-card glass-panel">
+          <div className="info-icon text-accent"><RefreshCw size={24} /></div>
+          <h4>Recall@10: 14.30%</h4>
+          <p>Fraction of all relevant items successfully retrieved in the top 10 recommendations.</p>
         </div>
         <div className="info-card glass-panel">
           <div className="info-icon text-accent"><Activity size={24} /></div>
-          <h4>NDCG@10: 0.42</h4>
-          <p>Normalized Discounted Cumulative Gain. Measures ranking quality, proving we put the best items at the very top of the list.</p>
+          <h4>NDCG@10: 0.7787</h4>
+          <p>Normalized Discounted Cumulative Gain measures ranking quality. A score of 0.78 means the model places relevant items near the very top of the recommendation list.</p>
         </div>
       </div>
 
