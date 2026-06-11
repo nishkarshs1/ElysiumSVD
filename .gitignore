@@ -12,6 +12,7 @@ mlDash/.env.*
 # ==========================================
 mlRecommender/myenv/
 mlRecommender/__pycache__/
+mlRecommender/app/__pycache__/
 mlRecommender/.pytest_cache/
 mlRecommender/.ipynb_checkpoints/
 mlRecommender/build_movie_titles.py
