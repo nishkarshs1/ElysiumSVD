@@ -29,7 +29,7 @@ export default function Maths() {
           <h3>1. The Problem: The Sparse Interaction Matrix</h3>
         </div>
         <p className="math-desc">
-          In recommender systems, we start with a User-Item interaction matrix <i>R</i> of size <i>m × n</i>, where <i>m</i> is the number of users and <i>n</i> is the number of products.
+          In recommender systems, we start with a User-Item interaction matrix <i>R</i> of size <i>m × n</i>, where <i>m</i> is the number of users (6,040) and <i>n</i> is the number of movies (3,706).
         </p>
         <p className="math-desc mt-2">
           Because most users only interact with a tiny fraction of the total catalog, this matrix is highly <strong>sparse</strong> (often &gt;99% empty). It is computationally expensive to process directly and difficult to find patterns in.

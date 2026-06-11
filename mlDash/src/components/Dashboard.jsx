@@ -70,10 +70,10 @@ export default function Dashboard() {
           <span className="text-accent">💡</span> How to use the Inference Engine
         </h3>
         <ul style={{ paddingLeft: '24px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <li><strong style={{color: 'var(--text-primary)'}}>1. Enter a User ID (0-499):</strong> The SVD model requires a user profile to generate personalized recommendations. It multiplies that user's unique "Taste Vector" against the database to find their best matches. Try ID <strong>0</strong> or <strong>42</strong>!</li>
-          <li><strong style={{color: 'var(--text-primary)'}}>2. Explore the Latent Space Map:</strong> Scroll down to see the live graph. This plots the algorithm's "brain". Products with similar hidden traits cluster together. When you search, a web will connect your recommendations on the grid!</li>
+          <li><strong style={{color: 'var(--text-primary)'}}>1. Enter a User ID (0-6039):</strong> The SVD model requires a user profile to generate personalized recommendations. It multiplies that user's unique "Taste Vector" against the database of 3,706 movies to find their best matches. Try ID <strong>0</strong> or <strong>42</strong>!</li>
+          <li><strong style={{color: 'var(--text-primary)'}}>2. Explore the Latent Space Map:</strong> Scroll down to see the live graph. This plots the algorithm's "brain" across 3,706 movies. Movies with similar hidden traits cluster together. When you search, a web will connect your recommendations on the grid!</li>
           <li><strong style={{color: 'var(--text-primary)'}}>3. Interactive Nodes:</strong> You can click directly on any dot in the graph to instantly run inference for that specific node.</li>
-          <li><strong style={{color: 'var(--text-primary)'}}>4. Cold Start Fallback:</strong> Enter an unknown ID (e.g., <strong>999</strong>) to simulate a brand new user. The system will detect the lack of history and automatically fall back to serving the most universally popular items!</li>
+          <li><strong style={{color: 'var(--text-primary)'}}>4. Cold Start Fallback:</strong> Enter an unknown ID (e.g., <strong>9999</strong>) to simulate a brand new user. The system will detect the lack of history and automatically fall back to serving the most universally popular movies!</li>
         </ul>
       </div>
 
@@ -82,7 +82,7 @@ export default function Dashboard() {
           <Search className="search-icon" size={20} />
           <input 
             type="number" 
-            placeholder="Enter User ID (e.g., 100)" 
+            placeholder="Enter User ID (e.g., 42)" 
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
             min="0"

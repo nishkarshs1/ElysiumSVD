@@ -19,14 +19,14 @@ export default function Architecture() {
     <div className="page-container" ref={pageRef}>
       <div className="page-header">
         <h2>System Architecture</h2>
-        <p>A deep dive into the Matrix Factorization pipeline.</p>
+        <p>A deep dive into the Matrix Factorization pipeline powering 6,040 users and 3,706 movies.</p>
       </div>
 
       <div className="arch-grid">
         <div className="arch-card glass-panel">
           <Database className="text-accent arch-icon" size={32} />
           <h3>1. Data Processing (Python)</h3>
-          <p>User-item interaction data is ingested and normalized. The system pivots this data into a highly sparse Coordinate Format (COO/CSR) matrix using <code>scipy.sparse</code>, preparing it for decomposition.</p>
+          <p>User-movie interaction data from the MovieLens 1M dataset is ingested and normalized. The system pivots this data into a highly sparse Coordinate Format (COO/CSR) matrix using <code>scipy.sparse</code>, preparing it for decomposition.</p>
         </div>
 
         <div className="arch-card glass-panel">

@@ -105,7 +105,7 @@ export default function ProductList({
               <Package size={28} />
             </div>
             <div className="product-info">
-              <h3>Product #{productId}</h3>
+              <h3>Movie #{productId}</h3>
               <span className="view-similar">
                 {selectedProduct === productId
                   ? "Hide Similar"
@@ -145,7 +145,7 @@ export default function ProductList({
                 onMouseLeave={() => setHoveredProduct(null)}
               >
                 <Package size={18} className="text-secondary" />
-                <span className="item-id">Product #{item.product_id}</span>
+                <span className="item-id">Movie #{item.product_id}</span>
                 <div className="similarity-bar">
                   <div
                     className="similarity-fill"

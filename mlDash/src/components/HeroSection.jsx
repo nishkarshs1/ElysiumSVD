@@ -21,7 +21,7 @@ export default function HeroSection() {
       <div className="hero-card glass-panel">
         <BrainCircuit className="text-accent hero-icon" size={40} />
         <h3>SVD Matrix Projection</h3>
-        <p>Our backend uses Singular Value Decomposition (SVD) to project users and items into a shared latent space, predicting preferences with high accuracy.</p>
+        <p>Our backend uses Singular Value Decomposition (SVD) to project 6,040 users and 3,706 movies into a shared latent space, predicting preferences with high accuracy.</p>
       </div>
 
       <div className="hero-card glass-panel">
@@ -33,7 +33,7 @@ export default function HeroSection() {
       <div className="hero-card glass-panel">
         <Sparkles className="text-accent hero-icon" size={40} />
         <h3>Real-time Inference</h3>
-        <p>Vectors are computed and stored efficiently, allowing for sub-millisecond retrieval of similar products using cosine similarity math.</p>
+        <p>Vectors are computed and stored efficiently, allowing for sub-millisecond retrieval of similar movies using cosine similarity math.</p>
       </div>
     </div>
   );

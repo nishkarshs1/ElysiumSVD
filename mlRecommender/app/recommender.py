@@ -8,38 +8,41 @@ U: Optional[np.ndarray] = None
 sigma: Optional[np.ndarray] = None
 Vt: Optional[np.ndarray] = None
 ratings_df: Optional[pd.DataFrame] = None
+user_ratings_mean: Optional[np.ndarray] = None
 
 def load_model():
-    global U, sigma, Vt, ratings_df
+    global U, sigma, Vt, ratings_df, user_ratings_mean
     
     CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) # Pointing to 'app/'
     BASE_DIR = os.path.dirname(CURRENT_DIR)                  # Pointing to 'mlRecommender/' root
     MODEL_DIR = os.path.join(BASE_DIR, "model")              # Absolute path to 'model/'
     
-    print(f"📦 System loading binary frames directly from: {MODEL_DIR}")
+    print(f"System loading binary frames directly from: {MODEL_DIR}")
     
     U = joblib.load(os.path.join(MODEL_DIR, "U.pkl"))
     sigma = joblib.load(os.path.join(MODEL_DIR, "sigma.pkl"))
     Vt = joblib.load(os.path.join(MODEL_DIR, "Vt.pkl"))
-    ratings_df = pd.read_csv(os.path.join(MODEL_DIR, "ratings_df.csv"))
+    ratings_df = joblib.load(os.path.join(MODEL_DIR, "ratings_df.csv"))
+    user_ratings_mean = joblib.load(os.path.join(MODEL_DIR, "user_ratings_mean.pkl"))
 
     print("Model loaded successfully")
 
 def get_recommendations(user_id: int, n: int = 5):
-    global U, sigma, Vt, ratings_df
+    global U, sigma, Vt, ratings_df, user_ratings_mean
     
     # 2. Defensive Guard: Type narrowing for Pylance + API Safety
-    if U is None or sigma is None or Vt is None or ratings_df is None:
+    if U is None or sigma is None or Vt is None or ratings_df is None or user_ratings_mean is None:
         raise RuntimeError("Model components are not loaded. Please call load_model() first.")
 
     # Now Pylance knows for sure that U, sigma, Vt, and ratings_df are NOT None
     if user_id >= U.shape[0]:
-        global_scores = np.dot(sigma, Vt)
+        global_scores = np.dot(np.diag(sigma), Vt).mean(axis=0)
         top_n = np.argsort(global_scores)[::-1][:n]
         return {"user_id": user_id, "recommendations": top_n.tolist(), "cold_start": True}
 
-    user_latent = U[user_id] * sigma
-    user_scores = np.dot(user_latent, Vt)
+    Sigma = np.diag(sigma)
+    R_predicted_user = np.dot(np.dot(U[user_id], Sigma), Vt) + user_ratings_mean[user_id]
+    user_scores = np.clip(R_predicted_user, 1, 5)
 
     # Exclude products the user already rated
     already_rated = ratings_df[ratings_df['user_id'] == user_id]['product_id'].values

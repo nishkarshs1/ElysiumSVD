@@ -23,12 +23,12 @@ export default function XAIPanel({ isOpen, targetId, results, onClose }) {
           
           <div className="xai-content">
             <p>
-              ElysiumSVD clustered <strong>Target Node #{targetId}</strong> with the following nodes based on cosine proximity in the shared latent space:
+              ElysiumSVD clustered <strong>Target Movie #{targetId}</strong> with the following movies based on cosine proximity in the shared latent space:
             </p>
             <ul className="xai-list">
               {results.slice(0, 3).map((item, i) => (
                 <li key={i}>
-                  ➔ Node #{item.product_id} due to a <strong>{(item.similarity * 100).toFixed(1)}%</strong> cosine proximity.
+                  ➔ Movie #{item.product_id} due to a <strong>{(item.similarity * 100).toFixed(1)}%</strong> cosine proximity.
                 </li>
               ))}
             </ul>

@@ -12,7 +12,7 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   
-  const CATEGORIES = ['All', 'Electronics', 'Clothing', 'Home & Garden', 'Books'];
+  const CATEGORIES = ['All', 'Action', 'Comedy', 'Drama', 'Sci-Fi'];
   // Deterministically assign a category based on product ID
   const getCategory = (id) => CATEGORIES[(id % (CATEGORIES.length - 1)) + 1];
   
@@ -192,12 +192,12 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
           key={p.product_id}
           className={className}
           style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
-          title={`Product ${p.product_id} (${nodeCategory})`}
+          title={`Movie ${p.product_id} (${nodeCategory})`}
           onClick={() => {
             if (onNodeClick) onNodeClick(p.product_id);
           }}
         >
-          <div className="dot-tooltip">Item #{p.product_id} <br/><span style={{fontSize:'10px', color:'var(--text-secondary)'}}>{nodeCategory}</span></div>
+          <div className="dot-tooltip">Movie #{p.product_id} <br/><span style={{fontSize:'10px', color:'var(--text-secondary)'}}>{nodeCategory}</span></div>
         </div>
       );
     });
@@ -225,7 +225,7 @@ export default function LatentSpaceMap({ highlightedProducts, hoveredProduct, se
       </div>
       
       <p className="latent-desc">
-        A 2D projection of how the matrix factorization model clusters products. {points.length > 0 && `Tracking ${points.length} nodes.`}
+        A 2D projection of how the matrix factorization model clusters movies. {points.length > 0 && `Tracking ${points.length} nodes.`}
       </p>
 
       {error ? (

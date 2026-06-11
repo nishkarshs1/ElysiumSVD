@@ -34,7 +34,7 @@ export default function Metrics() {
     <div className="page-container" ref={pageRef}>
       <div className="page-header">
         <h2>Model Evaluation Metrics</h2>
-        <p>Global performance analysis comparing ElysiumSVD to baseline heuristic models.</p>
+        <p>Global performance analysis comparing ElysiumSVD to baseline heuristic models. Evaluated on the MovieLens 1M dataset (6,040 users, 3,706 movies, ~1M ratings).</p>
       </div>
 
       {/* Top Stat Cards */}
