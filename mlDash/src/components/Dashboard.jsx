@@ -131,6 +131,9 @@ export default function Dashboard() {
           {loading ? <Loader2 className="spinner" size={20} /> : 'Get Recommendations'}
         </button>
       </form>
+      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '8px', opacity: 0.8 }}>
+        <em>Note: If the server is asleep, the first request may take up to 50s due to Render's cold start.</em>
+      </p>
 
       {error && (
         <div className="error-message glass-panel">
